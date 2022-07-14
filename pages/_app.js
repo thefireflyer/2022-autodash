@@ -35,11 +35,17 @@ function MyApp({ Component, pageProps }) {
     });
   }, []);
 
+  useEffect(() => {
+    console.info(user)
+  })
+
 
   return (<div className={styles.app}>
     <Head>
       <title>{`${pageProps.title} - ` || ''} Testing03</title>
-      <link rel='icon' href='/favicon.ico' />
+      <meta name="description" content="main web portal" />
+      <link rel='icon' href='/test.svg' />
+      <link rel="manifest" href="/web/manifest.json" />
     </Head>
     
     <ThemeProvider theme={darkTheme}>

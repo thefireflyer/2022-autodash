@@ -20,7 +20,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "rive-react": "^3.0.15",
-    "sass": "^1.52.3"
+    "sass": "^1.52.3",
+    "sqlite3": "^5.0.8"
   },
   "license": "MIT",
   "devDependencies": {
