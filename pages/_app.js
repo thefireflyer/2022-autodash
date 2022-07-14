@@ -45,7 +45,7 @@ function MyApp({ Component, pageProps }) {
       <title>{`${pageProps.title} - ` || ''} Testing03</title>
       <meta name="description" content="main web portal" />
       <link rel='icon' href='/test.svg' />
-      <link rel="manifest" href="/web/manifest.json" />
+      <link rel="manifest" href="/manifest.json" />
     </Head>
     
     <ThemeProvider theme={darkTheme}>
