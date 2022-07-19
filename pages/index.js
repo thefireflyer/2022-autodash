@@ -28,38 +28,7 @@ const Home = () => {
         Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
       </Typography>
     </div>}
-    <List>
-      <ListItem>
-        <ListItemText>
-          {info?.username}
-        </ListItemText>
-      </ListItem>
-      <ListItemButton onClick={() => {
-        let newUsername = "user#"+Math.round(Math.random() * 1000)
-        storage.current.keyValuePair("userdata", "username",newUsername).then(res => {
-          setInfo({
-            ...info,
-            username: newUsername
-          })
-        })
-      }}>
-        <ListItemText>
-          change username
-        </ListItemText>
-      </ListItemButton>
-      <ListItemButton onClick={() => {
-        storage.current.keyValuePair("userdata", "username",null).then(res => {
-          setInfo({
-            ...info,
-            username: ""
-          })
-        })
-      }}>
-        <ListItemText>
-          delete username
-        </ListItemText>
-      </ListItemButton>
-    </List>
+    <Typography>Dashboard</Typography>
   </Box>;
 };
 

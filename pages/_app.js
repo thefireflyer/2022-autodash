@@ -2,14 +2,14 @@
 import '../styles/globals.scss'
 import styles from '../styles/App.module.scss'
 import Head from 'next/head';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { UserContext } from '../lib/UserContext';
 import Router from 'next/router';
 import { magic } from '../lib/magic';
 import Layout from '../components/layout';
 import LayoutAlt from '../components/layout-alt';
 
-import { Backdrop, Paper } from '@mui/material'
+import { Backdrop, Paper, useMediaQuery } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { StorageContext } from '../lib/StorageContext';
 import Loading from '../components/loading';
@@ -145,6 +145,18 @@ function MyApp({ Component, pageProps }) {
       }
     });
   }, []);
+  
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
 
   return (<div className={styles.app}>
     <Head>
@@ -154,7 +166,7 @@ function MyApp({ Component, pageProps }) {
       <link rel="manifest" href="/manifest.json" />
     </Head>
 
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <Paper elevation={0} sx={{ width: `100%`, height: `100%`, overflow: `scroll` }}>
         <UserContext.Provider value={[user, setUser]}>
           <StorageContext.Provider value={[storage]}>

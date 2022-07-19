@@ -16,6 +16,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { demoPageContents, logo, navGroups, navIcons, navLinks } from './constants';
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../lib/UserContext';
@@ -28,7 +29,9 @@ import { DashboardCustomizeRounded, DashboardRounded, FaceRounded, PagesRounded 
 import { Container } from '@mui/system';
 //import Link from 'next/link';
 import { Breadcrumbs, Icon } from '@mui/material';
-import { AltLink as Link } from './link';
+import { AltLink, AltLink as Link } from './link';
+
+import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 
 const drawerWidth = 240;
 
@@ -148,6 +151,25 @@ function LayoutAlt(props) {
               </Link>
             ))}
           </Breadcrumbs>
+
+          <IconButton
+            color="inherit"
+            aria-label="open settings"
+            edge="end"
+            sx={{
+              mr: 2,
+              position: `absolute`,
+              right: `0`
+            }}
+          >
+            <Link href='/settings'>
+              <Typography
+                sx={{ display: 'flex', alignItems: 'center' }}
+                color="text.primary">
+                <SettingsIcon />
+              </Typography>
+            </Link>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Box
@@ -184,10 +206,38 @@ function LayoutAlt(props) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, maxWidth: `100vw` }}
+        sx={{
+          flexGrow: 1, p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          maxWidth: `100vw`,
+          position: `relative`
+        }}
       >
         <Toolbar />
-        {props.children}
+        <AnimatePresence initial={false}>
+        <Box
+          sx={{position:`absolute`, width:`100%`, left:`0`, p:3 }}>
+          <motion.div
+            variants={{
+              enter: { opacity: 0, y: 100 },
+              visible: { opacity: 1, x: 0, y: 0 },
+              exit: { opacity: 0, x: 0, y: -100 }
+            }}
+            key={props.title}
+            initial="enter"
+            animate="visible"
+            exit="exit"
+            transition={{
+              y: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.15 }
+            }}
+          >
+            {props.children}
+          </motion.div>
+        </Box>
+        </AnimatePresence>
+        
+
         {/* <Divider sx={{ margin: `2rem` }} />
         {demoPageContents} */}
       </Box>

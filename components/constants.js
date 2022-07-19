@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { DashboardRounded, DnsRounded, NotesRounded, ScheduleRounded, StickyNote2Rounded, TaskRounded } from '@mui/icons-material';
+import { SettingsIcon, DashboardRounded, DnsRounded, NotesRounded, ScheduleRounded, StickyNote2Rounded, TaskRounded } from '@mui/icons-material';
 
 export const demoPageContents = (
     <Typography>
@@ -41,6 +41,7 @@ export const navIcons = {
     "TaskRounded": <TaskRounded />,
     "StickyNote2Rounded": <StickyNote2Rounded />,
     "DnsRounded": <DnsRounded />,
+    "SettingsIcon": <SettingsIcon />,
 }
 
 export const navInfo = {
@@ -91,6 +92,12 @@ export const navInfo = {
         name: "Login",
         icon: "LoginRoundedIcon",
         link: "/login"
+    },
+    settings :
+    {
+        name: "Settings",
+        icon: "SettingsIcon",
+        link: "/settings"
     },
 }
 
