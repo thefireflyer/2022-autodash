@@ -34,10 +34,6 @@ const drawerWidth = 240;
 
 function LayoutAlt(props) {
 
-  useEffect(() => {
-    console.log(props)
-  })
-
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
