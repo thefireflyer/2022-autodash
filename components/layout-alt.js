@@ -215,28 +215,43 @@ function LayoutAlt(props) {
       >
         <Toolbar />
         <AnimatePresence initial={false}>
-        <Box
-          sx={{position:`absolute`, width:`100%`, left:`0`, p:3 }}>
-          <motion.div
-            variants={{
-              enter: { opacity: 0, y: 100 },
-              visible: { opacity: 1, x: 0, y: 0 },
-              exit: { opacity: 0, x: 0, y: -100 }
-            }}
+          <Box
             key={props.title}
-            initial="enter"
-            animate="visible"
-            exit="exit"
-            transition={{
-              y: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.15 }
-            }}
-          >
-            {props.children}
-          </motion.div>
-        </Box>
+            sx={{
+              position: `absolute`,
+              width: `100%`,
+              left: `0`, p: 3
+            }}>
+            <motion.div
+              variants={{
+                enter: {
+                  opacity: 0,
+                  y: 100,
+                },
+                visible: {
+                  opacity: 1,
+                  x: 0, y: 0,
+                  scale: 1
+                },
+                exit: {
+                  opacity: 0,
+                  scale: 0.7
+                }
+              }}
+              initial="enter"
+              animate="visible"
+              exit="exit"
+              transition={{
+                // y: { type: "spring", stiffness: 300, damping: 30 },
+                // opacity: { duration: 0.15 }
+              }}
+            >
+              {props.children}
+            </motion.div>
+
+          </Box>
         </AnimatePresence>
-        
+
 
         {/* <Divider sx={{ margin: `2rem` }} />
         {demoPageContents} */}
