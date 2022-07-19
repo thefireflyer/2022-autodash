@@ -106,7 +106,7 @@ function MyApp({ Component, pageProps }) {
     if (!window.indexedDB) {
       console.log("Your browser doesn't support a stable version of IndexedDB.");
     }
-    let request = window.indexedDB.open("testing03", 1);
+    let request = window.indexedDB.open("testing05", 1);
     request.onerror = event => {
       setError("Database error: " + event.target.errorCode)
     };
