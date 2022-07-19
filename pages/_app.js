@@ -134,6 +134,7 @@ function MyApp({ Component, pageProps }) {
   // Otherwise, redirect to /login and set UserContext to { user: null }
   useEffect(() => {
     setIsLoading(true)
+    setupStorage(false)
     setUser({ loading: true });
     magic.user.isLoggedIn().then((isLoggedIn) => {
       if (isLoggedIn) {
@@ -142,7 +143,6 @@ function MyApp({ Component, pageProps }) {
         //Router.push('/login');
         setUser({ user: null });
       }
-      setupStorage(isLoggedIn)
     });
   }, []);
 
