@@ -9,10 +9,11 @@ import { magic } from '../lib/magic';
 import Layout from '../components/layout';
 import LayoutAlt from '../components/layout-alt';
 
-import { Backdrop, Paper, useMediaQuery } from '@mui/material'
+import { Alert, AlertTitle, Backdrop, Button, IconButton, Paper, useMediaQuery } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { StorageContext } from '../lib/StorageContext';
 import Loading from '../components/loading';
+import { CloseRounded } from '@mui/icons-material';
 
 const darkTheme = createTheme({
   palette: {
@@ -24,7 +25,7 @@ const NO_VALUE = Math.random()
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState();
-  const [error, setError] = useState();
+  const [alert, newAlert] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const storage = useRef();
 
@@ -42,25 +43,12 @@ function MyApp({ Component, pageProps }) {
          */
         (database, key, updatedValue = NO_VALUE) =>
           new Promise((resolve, reject) => {
-
+            
             const transaction = storage.current.db.transaction(database, "readwrite");
-
-            transaction.oncomplete = event => {
-            };
-
-            transaction.onerror = event => {
-              setError("Database error: " + event.target.errorCode)
-              reject(event.target.errorCode);
-            };
-
+            
             const objectStore = transaction.objectStore(database);
 
             const request = objectStore.get(key);
-
-            request.onerror = event => {
-              setError("Database error: " + event.target.errorCode)
-              reject(event.target.errorCode);
-            }
 
             request.onsuccess = event => {
               const data = event.target.result;
@@ -108,10 +96,22 @@ function MyApp({ Component, pageProps }) {
     }
     let request = window.indexedDB.open("testing05", 1);
     request.onerror = event => {
-      setError("Database error: " + event.target.errorCode)
+      newAlert({
+        type: "error",
+        title: "Trouble opening database",
+        text: event.target.errorCode
+      })
     };
     request.onsuccess = event => {
       storage.current.db = event.target.result;
+
+      storage.current.db.onerror = event => {
+        newAlert({
+          type: "error",
+          title: "Database error",
+          text: event.target.errorCode
+        })
+      }
 
       storage.current.keyValuePair(
         "userdata", "username").then(res => {
@@ -123,9 +123,15 @@ function MyApp({ Component, pageProps }) {
 
     request.onupgradeneeded = event => {
 
+
       storage.current.db = event.target.result;
       storage.current.createDatabase("userdata", "info");
 
+      newAlert({
+        type: "info",
+        title: "Update",
+        text: "update complete"
+      })
     };
 
   }
@@ -145,9 +151,9 @@ function MyApp({ Component, pageProps }) {
       }
     });
   }, []);
-  
+
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -177,10 +183,25 @@ function MyApp({ Component, pageProps }) {
               }
             </LayoutAlt>
             <Backdrop
-              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-              open={error != null}
-              onClick={() => { setError(null) }}>
-              {error}
+              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={alert != null}>
+              <Alert
+                variant={`outlined`}
+                sx={{ width: `70%` }}
+                severity={alert?.type}
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => { newAlert(null) }}
+                  >
+                    <CloseRounded fontSize="inherit" />
+                  </IconButton>
+                }>
+                <AlertTitle>{alert?.title}</AlertTitle>
+                {alert?.text}
+              </Alert>
             </Backdrop>
           </StorageContext.Provider>
         </UserContext.Provider>

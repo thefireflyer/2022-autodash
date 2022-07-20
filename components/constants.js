@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { SettingsIcon, DashboardRounded, DnsRounded, NotesRounded, ScheduleRounded, StickyNote2Rounded, TaskRounded } from '@mui/icons-material';
+import { DashboardRounded, DnsRounded, NotesRounded, ScheduleRounded, StickyNote2Rounded, TaskRounded } from '@mui/icons-material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export const demoPageContents = (
     <Typography>
