@@ -214,10 +214,9 @@ function LayoutAlt(props) {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           maxWidth: `100vw`,
           height: `100%`,
-          position: `relative`
+          position: `relative`,
         }}
       >
-        <Toolbar />
         <AnimatePresence initial={false}>
           <Box
             key={props.title}
@@ -225,9 +224,11 @@ function LayoutAlt(props) {
               position: `absolute`,
               width: `100%`,
               height: `100%`,
-              left: `0`, p: 3
+              left: `0`, top: `auto`, p: 3,
+              overflow:`hidden`
             }}>
             <motion.div
+              style={{height:`100%`}}
               variants={{
                 enter: {
                   opacity: 0,
@@ -239,8 +240,7 @@ function LayoutAlt(props) {
                   scale: 1
                 },
                 exit: {
-                  opacity: 0,
-                  scale: 0.7
+                  opacity: 0
                 }
               }}
               initial="enter"
@@ -251,6 +251,7 @@ function LayoutAlt(props) {
                 // opacity: { duration: 0.15 }
               }}
             >
+            <Toolbar />
               {props.children}
             </motion.div>
 

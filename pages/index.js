@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../lib/UserContext';
 import Loading from '../components/loading.js';
-import { Paper, Button, List, ListItem, ListItemButton, ListItemText, Typography, Card, Grid, Divider, Stack } from '@mui/material';
+import { Paper, Button, List, ListItem, ListItemButton, ListItemText, Typography, Card, Grid, Divider, Stack, Container } from '@mui/material';
 import { navInfo } from '../components/constants';
 import { StorageContext } from '../lib/StorageContext';
 import { Box } from '@mui/system';
+import { AltLink } from '../components/link';
+import { InfoRounded } from '@mui/icons-material';
 
 const Clock = (props) => {
   const [date, setDate] = useState(new Date());
@@ -47,13 +49,14 @@ const Home = () => {
 
   })
 
-  return <Box>
+  return <Box sx={{ height: `100%` }}>
     {
-      user?.issuer && <div>
-        <Typography variant={`header`}>
-          Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
-        </Typography>
-      </div>}
+      // user?.issuer && <div>
+      //   <Typography variant={`header`}>
+      //     Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
+      //   </Typography>
+      // </div>
+    }
     {/* <Card
       sx={{
         m: 3,
@@ -78,25 +81,47 @@ const Home = () => {
       }}>
       <Typography>Updates</Typography>
     </Card> */}
-    <Grid container spacing={3}>
-      <Grid item xs={12} lg={9}>
+    <Grid container spacing={3} sx={{ height: `100%`}}>
+      
+      <Grid item xs={12} lg={9} xl={9.5}>
         <Card sx={{ p: 3 }}>
           <Typography variant={`h5`}>Dashboard</Typography>
         </Card>
       </Grid>
-      <Grid item xs sx={{display:{xs:`none`, md: `none`, lg:`block`}}}>
-        <Stack spacing={3}>
-          <Card sx={{ p: 3 }}>
-            <Clock variant={`h6`} />
-          </Card>
-          <Card sx={{ p: 3 }}>
-            <Typography variant={`h6`}>Updates</Typography>
-            <Divider />
-            <List>
-              {/** Links to release notes */}
-            </List>
-          </Card>
-        </Stack>
+
+      <Grid item xs sx={{
+        display: { xs: `none`, md: `none`, lg: `block` }
+      }}>
+        <Grid
+          container
+          spacing={3}
+          direction="column"
+          sx={{ height: `100%` }}
+        >
+          <Grid item>
+            <Card sx={{ p: 3 }} variant={`outlined`}>
+              <Clock variant={`h6`} />
+            </Card>
+          </Grid>
+          <Grid item xs>
+            <Card sx={{ p: 3, height: `100%` }} variant={`outlined`}>
+              <Typography variant={`h6`}>Updates</Typography>
+              <Divider />
+              <List>
+              </List>
+            </Card>
+          </Grid>
+          <Grid item >
+
+            <Card sx={{ p: 3 }} variant={`outlined`}>
+              <AltLink href={`https://theflyingfire.github.io/website/blog/test1`}>
+                <Typography sx={{ display: 'flex', justifyContent:`center`, alignItems: 'center' }} variant={`h6`}>
+                  <InfoRounded />Release notes
+                </Typography>
+              </AltLink>
+            </Card>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   </Box>;

@@ -59,12 +59,12 @@ const Settings = (props) => {
       </Toolbar>
     </AppBar>
     <Box sx={{p: 3}}>
-    <Card>
       {user?.issuer && <div>
         <Typography variant={`header`}>
           Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
         </Typography>
       </div>}
+    <Card>
       <List>
         <ListItem>
           <ListItemText>
