@@ -50,7 +50,9 @@ const Login = () => {
       <EmailForm disabled={disabled} onEmailSubmit={handleLoginWithEmail} />
       <style jsx>{`
         .login {
+          flex:1;
           max-width: 20rem;
+          height: max-content;
           margin: 40px auto 0;
           padding: 1rem;
           border: 1px solid #dfe1e5;
