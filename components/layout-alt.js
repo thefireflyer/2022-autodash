@@ -28,7 +28,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { DashboardCustomizeRounded, DashboardRounded, FaceRounded, PagesRounded } from '@mui/icons-material';
 import { Container } from '@mui/system';
 //import Link from 'next/link';
-import { Breadcrumbs, Icon } from '@mui/material';
+import { Breadcrumbs, Icon, SwipeableDrawer } from '@mui/material';
 import { AltLink, AltLink as Link } from './link';
 
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
@@ -181,21 +181,21 @@ function LayoutAlt(props) {
         aria-label="mailbox folders"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
-          variant="temporary"
+        <SwipeableDrawer
+          anchor={`left`}
           open={mobileOpen}
-          onClose={handleDrawerToggle}
+          onClose={()=>{setMobileOpen(false)}}
+          onOpen={()=>{setMobileOpen(true)}}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
+            display: { xs: 'auto', sm: 'none' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
           {drawer}
-        </Drawer>
+        </SwipeableDrawer>
         <Drawer
           variant="permanent"
           sx={{
@@ -210,13 +210,20 @@ function LayoutAlt(props) {
       <Box
         component="main"
         sx={{
-          flexGrow: 1,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          display:`flex`,
+          flexDirection:`column`,
+          width: { xs: `100%`, sm: `calc(100% - ${drawerWidth}px)` },
           maxWidth: `100vw`,
           height: `100%`,
-          position: `relative`,
         }}
       >
+
+        <Toolbar />
+        <Box sx={{
+              flex:1,
+              width: `100%`,
+              position: `relative`
+            }}>
         <AnimatePresence initial={false}>
           <Box
             key={props.title}
@@ -224,11 +231,12 @@ function LayoutAlt(props) {
               position: `absolute`,
               width: `100%`,
               height: `100%`,
-              left: `0`, top: `auto`, p: 3,
-              overflow:`hidden`
+              left: `0`, top: `0`, p:3,
+              display:`flex`
             }}>
             <motion.div
-              style={{height:`100%`}}
+              style={{flex:1,
+                display:`flex`}}
               variants={{
                 enter: {
                   opacity: 0,
@@ -236,32 +244,24 @@ function LayoutAlt(props) {
                 },
                 visible: {
                   opacity: 1,
-                  x: 0, y: 0,
-                  scale: 1
+                  y: 0
                 },
                 exit: {
-                  opacity: 0
+                  opacity: 0,
                 }
               }}
               initial="enter"
               animate="visible"
               exit="exit"
-              transition={{
-                // y: { type: "spring", stiffness: 300, damping: 30 },
-                // opacity: { duration: 0.15 }
-              }}
             >
-            <Toolbar />
               {props.children}
             </motion.div>
 
           </Box>
         </AnimatePresence>
-
-
-        {/* <Divider sx={{ margin: `2rem` }} />
-        {demoPageContents} */}
       </Box>
+      </Box>
+
     </Box>
   );
 }

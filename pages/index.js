@@ -49,54 +49,22 @@ const Home = () => {
 
   })
 
-  return <Box sx={{ height: `100%` }}>
-    {
-      // user?.issuer && <div>
-      //   <Typography variant={`header`}>
-      //     Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
-      //   </Typography>
-      // </div>
-    }
-    {/* <Card
-      sx={{
-        m: 3,
-        p: 3,
-        width: {
-          sm: `100%`,
-          lg: `70%`
-        },
-        height: `20rem`
-      }}>
-      <Clock variant={`h3`} />
-      <Typography>Dashboard</Typography>
-    </Card>
-    <Card
-      sx={{
-        m: 3,
-        p: 3,
-        width: {
-          sm: `100%`,
-          lg: `20%`
-        },
-      }}>
-      <Typography>Updates</Typography>
-    </Card> */}
-    <Grid container spacing={3} sx={{ height: `100%`}}>
+  return <Grid container spacing={3} sx={{ flex:1 }}>
       
       <Grid item xs={12} lg={9} xl={9.5}>
-        <Card sx={{ p: 3 }}>
-          <Typography variant={`h5`}>Dashboard</Typography>
+        <Card sx={{ p: 3, height:`100%`, width:`100%` }}>
+          <Typography variant={`h6`}>Dashboard</Typography>
         </Card>
       </Grid>
 
       <Grid item xs sx={{
-        display: { xs: `none`, md: `none`, lg: `block` }
+        display: { xs: `none`, md: `none`, lg: `flex` }
       }}>
         <Grid
           container
           spacing={3}
           direction="column"
-          sx={{ height: `100%` }}
+          sx={{ flex:1 }}
         >
           <Grid item>
             <Card sx={{ p: 3 }} variant={`outlined`}>
@@ -123,8 +91,7 @@ const Home = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
-  </Box>;
+    </Grid>;
 };
 
 export default Home;
