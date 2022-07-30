@@ -15,12 +15,6 @@ import { StorageContext } from '../lib/StorageContext';
 import Loading from '../components/loading';
 import { CloseRounded } from '@mui/icons-material';
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-
 const NO_VALUE = Math.random()
 
 function MyApp({ Component, pageProps }) {
@@ -159,6 +153,12 @@ function MyApp({ Component, pageProps }) {
       createTheme({
         palette: {
           mode: prefersDarkMode ? 'dark' : 'light',
+          primary: {
+            main: prefersDarkMode ? '#b388ff' : '#81d4fa',
+          },
+          secondary: {
+            main: '#f50057',
+          },
         },
       }),
     [prefersDarkMode],

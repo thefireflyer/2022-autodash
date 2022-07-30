@@ -58,7 +58,6 @@ const Login = () => {
           border: 1px solid #dfe1e5;
           border-radius: 4px;
           text-align: center;
-          box-shadow: 0px 0px 6px 6px black;
           box-sizing: border-box;
         }
       `}</style>

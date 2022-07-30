@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import React from 'react';
 import { UserContext } from '../lib/UserContext';
 import Loading from '../components/loading.js';
-import { AppBar, Box, Button, Card, Container, Dialog, IconButton, List, ListItem, ListItemButton, ListItemText, Slide, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Card, Container, Dialog, IconButton, List, ListItem, ListItemButton, ListItemText, Slide, TextField, Toolbar, Typography } from '@mui/material';
 import { navInfo } from '../components/constants';
 import { StorageContext } from '../lib/StorageContext';
 import { CloseRounded, SaveRounded, SettingsRounded } from '@mui/icons-material';
@@ -20,8 +20,9 @@ const Settings = (props) => {
   const router = useRouter()
   const [open, setOpen] = React.useState(true);
 
+
   const handleClose = () => {
-    setOpen(false);
+    setOpen(false)
     router.back()
   };
 
@@ -41,11 +42,11 @@ const Settings = (props) => {
     open={open}
     onClose={handleClose}
     TransitionComponent={Transition}
-    PaperProps={{elevation:0}}
+    PaperProps={{ elevation: 0 }}
   >
     <AppBar sx={{ position: 'relative' }}>
       <Toolbar>
-          <SettingsRounded />
+        <SettingsRounded />
         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
           Settings
         </Typography>
@@ -58,46 +59,57 @@ const Settings = (props) => {
         </IconButton>
       </Toolbar>
     </AppBar>
-    <Box sx={{p: 3}}>
+    <Box sx={{ p: 3 }}>
       {user?.issuer && <div>
         <Typography variant={`header`}>
           Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
         </Typography>
       </div>}
-    <Card>
-      <List>
-        <ListItem>
-          <ListItemText>
-            {info?.username}
-          </ListItemText>
+      <Card sx={{ p: 3 }} variant={`outlined`}>
+        <List>
+          <ListItem>
+        <TextField id="username"
+          label="username"
+          variant={`standard`}
+          value={info ? info.username:``}
+          onChange={event => {
+            const newUsername = event.target.value
+            storage.current.keyValuePair("userdata", "username", newUsername).then(res => {
+              setInfo({
+                ...info,
+                username: newUsername
+              })
+            })
+          }}
+        />
         </ListItem>
-        <ListItemButton onClick={() => {
-          let newUsername = "user#" + Math.round(Math.random() * 1000)
-          storage.current.keyValuePair("userdata", "username", newUsername).then(res => {
-            setInfo({
-              ...info,
-              username: newUsername
+          <ListItemButton onClick={() => {
+            let newUsername = "user#" + Math.round(Math.random() * 1000)
+            storage.current.keyValuePair("userdata", "username", newUsername).then(res => {
+              setInfo({
+                ...info,
+                username: newUsername
+              })
             })
-          })
-        }}>
-          <ListItemText>
-            change username
-          </ListItemText>
-        </ListItemButton>
-        <ListItemButton onClick={() => {
-          storage.current.keyValuePair("userdata", "username", null).then(res => {
-            setInfo({
-              ...info,
-              username: ""
+          }}>
+            <ListItemText>
+              random username
+            </ListItemText>
+          </ListItemButton>
+          <ListItemButton onClick={() => {
+            storage.current.keyValuePair("userdata", "username", null).then(res => {
+              setInfo({
+                ...info,
+                username: ""
+              })
             })
-          })
-        }}>
-          <ListItemText>
-            delete username
-          </ListItemText>
-        </ListItemButton>
-      </List>
-    </Card>
+          }}>
+            <ListItemText>
+              clear username
+            </ListItemText>
+          </ListItemButton>
+        </List>
+      </Card>
     </Box>
   </Dialog>;
 };
