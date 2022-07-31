@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import DatePicker from "@cloudscape-design/components/date-picker";
 import { Add, AddCircle, AddCircleOutline } from '@mui/icons-material';
 import { ScheduleDisplay } from '../../components/scheduleDisplay';
+import Link from 'next/link';
 
 const variants = {
   enter: (direction) => {
@@ -129,12 +130,14 @@ const Schedule = () => {
       </AnimatePresence>
     </Box>
 
+    <Link href='./create-event'>
     <Fab size="medium"
       variant={`extended`}
       color="secondary"
       aria-label="add">
       <Add />
     </Fab>
+    </Link>
 
   </Stack>;
 };
