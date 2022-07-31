@@ -36,16 +36,16 @@ const swipePower = (offset, velocity) => {
 
 const Schedule = () => {
   const [[date, direction], setDate] = useState([
-    `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+    `${new Date().getUTCFullYear()}-${new Date().getUTCMonth() + 1}-${new Date().getUTCDate()}`,
     0]
   );
 
   const paginate = (newDirection) => {
     let newDate = new Date(date)
     console.log(newDate)
-    newDate.setDate(newDate.getDate() + newDirection)
+    newDate.setUTCDate(newDate.getUTCDate() + newDirection)
     setDate([
-      `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`,
+      `${newDate.getUTCFullYear()}-${newDate.getUTCMonth() + 1}-${newDate.getUTCDate()}`,
       newDirection])
   };
 
@@ -56,6 +56,7 @@ const Schedule = () => {
       justifyContent="right"
       spacing={3}
       sx={{ display: `flex` }}>
+
       <DatePicker
         onChange={({ detail }) => setDate([detail.value, 0])}
         value={date}
@@ -70,9 +71,10 @@ const Schedule = () => {
         previousMonthAriaLabel="Previous month"
         todayAriaLabel="Today"
       />
+      
       <Button variant={`outlined`} sx={{ flex: 1 }} onClick={() => {
         setDate([
-          `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+          `${new Date().getUTCFullYear()}-${new Date().getUTCMonth() + 1}-${new Date().getUTCDate()}`,
           0])
       }}>Today</Button>
     </Stack>

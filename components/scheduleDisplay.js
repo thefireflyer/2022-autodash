@@ -8,9 +8,9 @@ const GenericSegment = (props) => {
     if (props.label) {
 
         let formattedTime = new Date()
-        formattedTime.setHours(0)
-        formattedTime.setMinutes(props.i * 15)
-        formattedTime = `${formattedTime.getHours()}:${formattedTime.getMinutes()}`
+        formattedTime.setUTCHours(0)
+        formattedTime.setUTCMinutes(props.i * 15)
+        formattedTime = `${formattedTime.getUTCHours()}:${formattedTime.getUTCMinutes()}`
 
         return (
             <Paper sx={{ width: `100%`, height: `2rem` }}
@@ -74,8 +74,8 @@ const ScheduleDisplayOverlay = (props) => {
 const DayDisplay = (props) => {
 
     let date = new Date(props.date)
-    date.setDate(date.getDate() + props.dateModifier)
-    date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    date.setUTCDate(date.getUTCDate() + props.dateModifier)
+    date = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`
 
     const segments = []
     const segmentReferences = []
