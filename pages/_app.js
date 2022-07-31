@@ -15,6 +15,9 @@ import { StorageContext } from '../lib/StorageContext';
 import Loading from '../components/loading';
 import { CloseRounded } from '@mui/icons-material';
 
+import { applyMode, applyDensity, Density, Mode } from '@cloudscape-design/global-styles';
+
+
 const NO_VALUE = Math.random()
 
 function MyApp({ Component, pageProps }) {
@@ -37,9 +40,9 @@ function MyApp({ Component, pageProps }) {
          */
         (database, key, updatedValue = NO_VALUE) =>
           new Promise((resolve, reject) => {
-            
+
             const transaction = storage.current.db.transaction(database, "readwrite");
-            
+
             const objectStore = transaction.objectStore(database);
 
             const request = objectStore.get(key);
@@ -130,9 +133,11 @@ function MyApp({ Component, pageProps }) {
 
   }
 
-  // If isLoggedIn is true, set the UserContext with user data
-  // Otherwise, redirect to /login and set UserContext to { user: null }
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  
   useEffect(() => {
+
+    
     setIsLoading(true)
     setupStorage(false)
     setUser({ loading: true });
@@ -144,9 +149,15 @@ function MyApp({ Component, pageProps }) {
         setUser({ user: null });
       }
     });
+    
   }, []);
 
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  useEffect(() => {
+    
+    applyMode(prefersDarkMode ? Mode.Dark : Mode.Light);
+    
+  })
+
 
   const theme = useMemo(
     () =>

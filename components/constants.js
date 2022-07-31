@@ -119,4 +119,4 @@ export const navGroups = [
     ],
 ]
 
-export const logo = <img height={`25rem`} src='./test.svg'></img>
+export const logo = <img height={`25rem`} src='/test.svg'></img>

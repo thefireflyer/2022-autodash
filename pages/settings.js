@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import React from 'react';
 import { UserContext } from '../lib/UserContext';
 import Loading from '../components/loading.js';
-import { AppBar, Box, Button, Card, Container, Dialog, IconButton, List, ListItem, ListItemButton, ListItemText, Slide, TextField, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Card, Container, Dialog, IconButton, List, ListItem, ListItemButton, ListItemText, Slide, Stack, TextField, Toolbar, Typography } from '@mui/material';
 import { navInfo } from '../components/constants';
 import { StorageContext } from '../lib/StorageContext';
 import { CloseRounded, SaveRounded, SettingsRounded } from '@mui/icons-material';
@@ -59,7 +59,7 @@ const Settings = (props) => {
         </IconButton>
       </Toolbar>
     </AppBar>
-    <Box sx={{ p: 3 }}>
+    <Stack sx={{ p: 3 }} spacing={3}>
       {user?.issuer && <div>
         <Typography variant={`header`}>
           Logged in as {user.email.slice(0, user.email.indexOf('@')).replaceAll(".", " ")}
@@ -110,7 +110,9 @@ const Settings = (props) => {
           </ListItemButton>
         </List>
       </Card>
-    </Box>
+      {/* <Card sx={{ p: 3 }} variant={`outlined`}>
+      </Card> */}
+    </Stack>
   </Dialog>;
 };
 export default Settings;

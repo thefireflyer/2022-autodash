@@ -9,26 +9,8 @@ import { AltLink } from '../components/link';
 import { FeedOutlined, InfoRounded, LastPageRounded, UnfoldLessRounded, UnfoldMoreRounded } from '@mui/icons-material';
 import TreeView from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
+import { Clock } from '../components/clock';
 
-const Clock = (props) => {
-  const [date, setDate] = useState(new Date());
-
-  function refreshClock() {
-    setDate(new Date());
-  }
-  useEffect(() => {
-    const timerId = setInterval(refreshClock, 1000);
-    return function cleanup() {
-      clearInterval(timerId);
-    };
-  }, []);
-
-  return (
-    <Typography {...props}>
-      {date.toLocaleTimeString()}
-    </Typography>
-  )
-}
 
 const Home = (props) => {
   const [user] = useContext(UserContext);
@@ -36,6 +18,8 @@ const Home = (props) => {
 
   const [info, setInfo] = useState();
 
+  const welcomeMessage = (new Date().getHours() < 12) ? `Good morning` : 
+    `Welcome back`
 
   useEffect(() => {
     storage.current.keyValuePair("userdata", "username").then(res => {
@@ -73,7 +57,7 @@ const Home = (props) => {
           <Box sx={{ width: '100%' }}>
             {
               info?.username ? (
-                <Typography variant={`h6`}>Good morning {info.username}!</Typography>
+                <Typography variant={`h6`}>{welcomeMessage} {info.username}!</Typography>
               ) : (
                 <Skeleton width="100%">
                   <Typography variant={`h6`}>.</Typography>
