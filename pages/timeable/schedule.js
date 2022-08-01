@@ -29,7 +29,7 @@ const variants = {
     };
   }
 };
-const swipeConfidenceThreshold = 10000;
+const swipeConfidenceThreshold = 1000;
 const swipePower = (offset, velocity) => {
   return Math.abs(offset) * velocity;
 };
@@ -37,7 +37,7 @@ const swipePower = (offset, velocity) => {
 
 const Schedule = () => {
   const [[date, direction], setDate] = useState([
-    `${new Date().getUTCFullYear()}-${new Date().getUTCMonth() + 1}-${new Date().getUTCDate()}`,
+    `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
     0]
   );
 
@@ -75,13 +75,13 @@ const Schedule = () => {
       
       <Button variant={`outlined`} sx={{ flex: 1 }} onClick={() => {
         setDate([
-          `${new Date().getUTCFullYear()}-${new Date().getUTCMonth() + 1}-${new Date().getUTCDate()}`,
+          `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
           0])
       }}>Today</Button>
     </Stack>
 
     <Box
-      sx={{ p: 3, flex: 1, display: `flex`, position: `relative` }}>
+      sx={{ p: 3, flex: 1, display: `flex`, position: `relative`, overflow:`hidden` }}>
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           style={{
