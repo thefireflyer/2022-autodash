@@ -177,7 +177,7 @@ function MyApp({ Component, pageProps }) {
 
   return (<div className={styles.app}>
     <Head>
-      <title>{`${pageProps.title} - ` || ''} Testing05</title>
+      <title>{`${pageProps.title} - ` || ''} Autodash</title>
       <meta name="description" content="main web portal" />
       <link rel='icon' href='/test.svg' />
       <link rel="manifest" href="/manifest.json" />

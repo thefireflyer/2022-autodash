@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "web apps",
-    "short_name": "apps",
+    "name": "Autodash",
+    "short_name": "dash",
     "description": "main web portal",
     "icons": [
         {
