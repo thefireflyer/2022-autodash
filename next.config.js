@@ -20,4 +20,11 @@ const pwaPlugin = withPWA({
     disable: process.env.NODE_ENV === 'development',
   },
 });
-module.exports = withPlugins([pwaPlugin, TMplugin])
+module.exports = withTM(
+  pwaPlugin
+)
+/*(_phase, { defaultConfig }) => {
+  const plugins = [withPWA, withTM]
+  return plugins.reduce((acc, plugin) => plugin(acc), { ...defaultConfig, ...nextConfig })
+}*/
+//withPlugins([pwaPlugin, TMplugin])
