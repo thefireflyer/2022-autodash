@@ -12,13 +12,13 @@ const withTM = require("next-transpile-modules")([
 ])
 const TMplugin = withTM(nextConfig)
 
-const withPWA = require('next-pwa');
-const pwaPlugin = withPWA({
-  reactStrictMode: true,
-  pwa: {
+const withPWA = require('next-pwa')({
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',
-  },
+  });
+  
+const pwaPlugin = withPWA({
+  reactStrictMode: true
 });
 module.exports = withTM(
   pwaPlugin
