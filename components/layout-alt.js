@@ -25,18 +25,19 @@ import { magic } from '../lib/magic';
 import Router from 'next/router';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { DashboardCustomizeRounded, DashboardRounded, FaceRounded, PagesRounded } from '@mui/icons-material';
+import { CloudCircleOutlined, CloudOffOutlined, CloudOutlined, DashboardCustomizeRounded, DashboardRounded, FaceRounded, PagesRounded, Search, SignalWifiConnectedNoInternet4Outlined } from '@mui/icons-material';
 import { Container } from '@mui/system';
 //import Link from 'next/link';
 import { Breadcrumbs, Icon, SwipeableDrawer } from '@mui/material';
 import { AltLink, AltLink as Link } from './link';
 
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
+import { StorageContext } from '../lib/StorageContext';
 
 const drawerWidth = 240;
 
 function LayoutAlt(props) {
-
+  const [storage] = useContext(StorageContext);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -46,12 +47,29 @@ function LayoutAlt(props) {
 
   const [user, setUser] = useContext(UserContext);
 
+  const [connectionStatus, setConnectionStatus] = useState()
+
   const logout = () => {
     magic.user.logout().then(() => {
       setUser({ user: null });
       Router.push('/login');
     });
   };
+
+  useEffect(() => {
+    if (user?.loading) { }
+    else {
+      storage.current?.onMessageRecieved.push(msg => {
+        setConnectionStatus(msg != "[connection closed]")
+      })
+      storage.current?.keyValuePair(
+        "serverdata", "useserver").then(res => {
+          if (res?.data == false) {
+            setConnectionStatus(false)
+          }
+        })
+    }
+  }, [user])
 
 
   const drawer = (
@@ -76,7 +94,7 @@ function LayoutAlt(props) {
       ))}
       <Container sx={{ position: `absolute`, bottom: `0` }}>
         <Divider sx={{ marginBottom: `1rem` }} />
-        {user?.loading ? <Loading /> : user?.issuer ?
+        {/* {user?.loading ? <Loading /> : user?.issuer ?
           <List>
             <ListItem>
               <Link href='/account' underline={`hover`}>
@@ -106,7 +124,30 @@ function LayoutAlt(props) {
                 <ListItemText>Sign in</ListItemText>
               </ListItemButton>
             </Link>
-          </ListItem>}
+          </ListItem>} */}
+        {user?.loading ? <Loading /> : connectionStatus ?
+          <ListItem>
+            <Link href='/settings' underline={`hover`}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <CloudOutlined />
+                </ListItemIcon>
+                <ListItemText>Connected</ListItemText>
+              </ListItemButton>
+            </Link>
+          </ListItem>
+          :
+          <ListItem>
+            <Link href='/settings' underline={`hover`}>
+              <ListItemButton variant={``}>
+                <ListItemIcon>
+                  <CloudOffOutlined />
+                </ListItemIcon>
+                <ListItemText>Local</ListItemText>
+              </ListItemButton>
+            </Link>
+          </ListItem>
+        }
       </Container>
     </Box>
   );
@@ -165,11 +206,11 @@ function LayoutAlt(props) {
               right: `0`
             }}
           >
-            <Link href='/settings'>
+            <Link href='/search'>
               <Typography
                 sx={{ display: 'flex', alignItems: 'center' }}
                 color="text.primary">
-                <SettingsIcon />
+                <Search />
               </Typography>
             </Link>
           </IconButton>
@@ -184,8 +225,8 @@ function LayoutAlt(props) {
         <SwipeableDrawer
           anchor={`left`}
           open={mobileOpen}
-          onClose={()=>{setMobileOpen(false)}}
-          onOpen={()=>{setMobileOpen(true)}}
+          onClose={() => { setMobileOpen(false) }}
+          onOpen={() => { setMobileOpen(true) }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -210,8 +251,8 @@ function LayoutAlt(props) {
       <Box
         component="main"
         sx={{
-          display:`flex`,
-          flexDirection:`column`,
+          display: `flex`,
+          flexDirection: `column`,
           width: { xs: `100%`, sm: `calc(100% - ${drawerWidth}px)` },
           maxWidth: `100vw`,
           height: `100%`,
@@ -220,46 +261,48 @@ function LayoutAlt(props) {
 
         <Toolbar />
         <Box sx={{
-              flex:1,
-              width: `100%`,
-              position: `relative`
-            }}>
-        <AnimatePresence initial={false}>
-          <Box
-            key={props.title}
-            sx={{
-              position: `absolute`,
-              width: `100%`,
-              height: `100%`,
-              left: `0`, top: `0`, p:3,
-              display:`flex`
-            }}>
-            <motion.div
-              style={{flex:1,
-                display:`flex`}}
-              variants={{
-                enter: {
-                  opacity: 0,
-                  y: 100,
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0
-                },
-                exit: {
-                  opacity: 0,
-                }
-              }}
-              initial="enter"
-              animate="visible"
-              exit="exit"
-            >
-              {props.children}
-            </motion.div>
+          flex: 1,
+          width: `100%`,
+          position: `relative`
+        }}>
+          <AnimatePresence initial={false}>
+            <Box
+              key={props.title}
+              sx={{
+                position: `absolute`,
+                width: `100%`,
+                height: `100%`,
+                left: `0`, top: `0`, p: 3,
+                display: `flex`
+              }}>
+              <motion.div
+                style={{
+                  flex: 1,
+                  display: `flex`
+                }}
+                variants={{
+                  enter: {
+                    opacity: 0,
+                    y: 100,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0
+                  },
+                  exit: {
+                    opacity: 0,
+                  }
+                }}
+                initial="enter"
+                animate="visible"
+                exit="exit"
+              >
+                {props.children}
+              </motion.div>
 
-          </Box>
-        </AnimatePresence>
-      </Box>
+            </Box>
+          </AnimatePresence>
+        </Box>
       </Box>
 
     </Box>

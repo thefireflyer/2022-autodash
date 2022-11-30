@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { DashboardRounded, DnsRounded, NotesRounded, ScheduleRounded, StickyNote2Rounded, TaskRounded } from '@mui/icons-material';
+import { DashboardRounded, DnsRounded, NotesRounded, ScheduleRounded, Search, StickyNote2Rounded, TaskRounded } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 export const demoPageContents = (
@@ -43,6 +43,7 @@ export const navIcons = {
     "StickyNote2Rounded": <StickyNote2Rounded />,
     "DnsRounded": <DnsRounded />,
     "SettingsIcon": <SettingsIcon />,
+    "SearchIcon": <Search />,
 }
 
 export const navInfo = {
@@ -100,6 +101,12 @@ export const navInfo = {
         icon: "SettingsIcon",
         link: "/settings"
     },
+    search :
+    {
+        name: "Search",
+        icon: "SearchIcon",
+        link: "/search"
+    },
 }
 
 export const navGroups = [
@@ -116,6 +123,9 @@ export const navGroups = [
     ],
     [
         navInfo.servers
+    ],
+    [
+        navInfo.settings
     ],
 ]
 

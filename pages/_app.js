@@ -30,6 +30,8 @@ function MyApp({ Component, pageProps }) {
 
     storage.current = {
       db: null,
+      server: null,
+      onMessageRecieved: [],
       keyValuePair:
         /**
          * @param {String} database an existing database to edit.
@@ -86,6 +88,155 @@ function MyApp({ Component, pageProps }) {
           resolve(storage.current.db.deleteObjectStore(databaseName));
         }),
 
+      getAll:
+        /**
+         * 
+         * @param {String} database 
+         * @returns 
+         */
+        (database) => new Promise((resolve, reject) => {
+          const transaction = storage.current.db.transaction(database, "readwrite");
+
+          const objectStore = transaction.objectStore(database)
+          let all = objectStore.getAll()
+          all.onsuccess = event => {
+            const data = event.target.result;
+            // console.log(data)
+            resolve(data)
+          }
+        }),
+
+      connectExternal:
+        /**
+         * 
+         * @returns {Boolean}
+         */
+        () => new Promise(async (resolve, reject) => {
+          setUser({loading: true})
+          let uri
+          let auth
+          let data = {}
+          // newAlert({
+          //   type: "info",
+          //   title: "Connecting to external server",
+          //   text: "Please wait..."
+          // })
+          await storage.current.keyValuePair("serverdata", "uri").then(res => {
+            uri = res?.data
+            console.log("loaded uri")
+          })
+          await storage.current.keyValuePair("serverdata", "serverauth").then(res => {
+            auth = res?.data
+            console.log("loaded serverauth")
+          })
+          await storage.current.getAll("userdata").then(res => {
+            res.forEach(element => {
+              console.log(element)
+              data[element.info] = element.data
+            });
+
+            console.log("data: ", data)
+          })
+
+
+          var operatingSystems = [
+            { name: 'Windows Phone', value: 'Windows Phone', version: 'OS' },
+            { name: 'Windows', value: 'Win', version: 'NT' },
+            { name: 'iPhone', value: 'iPhone', version: 'OS' },
+            { name: 'iPad', value: 'iPad', version: 'OS' },
+            { name: 'Kindle', value: 'Silk', version: 'Silk' },
+            { name: 'Android', value: 'Android', version: 'Android' },
+            { name: 'PlayBook', value: 'PlayBook', version: 'OS' },
+            { name: 'BlackBerry', value: 'BlackBerry', version: '/' },
+            { name: 'Macintosh', value: 'Mac', version: 'OS X' },
+            { name: 'Linux', value: 'Linux', version: 'rv' },
+            { name: 'Palm', value: 'Palm', version: 'PalmOS' }
+          ]
+
+          let deviceOS = "Unknown"
+          await operatingSystems.forEach(os => {
+            if (navigator.userAgent.includes(os.value)) {
+              console.log(os.name)
+              deviceOS = os.name
+            }
+          })
+
+          storage.current.server = await new WebSocket(`ws://` + uri + `/live/?os=` + deviceOS);
+          console.log(storage.current.server)
+          storage.current.server.onmessage = evt => {
+            console.log("Event data >>> " + evt.data)
+            storage.current.onMessageRecieved.forEach( reciever => {
+              reciever(evt.data)
+            })
+          }
+
+          storage.current.server.onclose = () => {
+            reject(false)
+            setUser({loading: false})
+            storage.current.server = null
+            storage.current.onMessageRecieved.forEach( reciever => {
+              reciever("[connection closed]")
+            })
+          }
+
+          storage.current.server.onopen = () => {
+            console.log("test")
+            storage.current.server.send(auth)
+            storage.current.getAll("userdata").then(res => {
+              let clientInfo = {}
+
+              res.forEach(element => {
+                console.log(element)
+                clientInfo[element.info] = element.data
+              });
+
+              clientInfo["test"] = "test"
+              storage.current.server.send(JSON.stringify(clientInfo))
+              storage.current.keyValuePair("serverdata", "useserver", true).then(res => {
+                console.log("connection successful")
+                setUser({loading: false})
+                resolve(res)
+              })
+
+            })
+
+          }
+
+          // fetch(`http://`+uri + "/admin/", {
+          //   method: `POST`,
+          //   body: JSON.stringify(data),
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //     "Authorization": `Basic ${window.btoa(auth)}`
+          //   }
+          // }).then(res => {
+          //   console.log("Request successful!")
+          //   console.log(res)
+          //   res.json().then(json => {
+          //     console.log(json)
+
+          //     storage.current.keyValuePair("serverdata", "useserver", true).then(res => {
+          //       console.log(res)
+          //     })
+
+          //     newAlert({
+          //       type: "success",
+          //       title: "Connected to database",
+          //       text: ""
+          //     })
+          //     resolve(true)
+
+          //   })
+          // }).catch(err => {
+          //   newAlert({
+          //     type: "error",
+          //     title: "Error connecting to external server",
+          //     text: `Request failed with status ${err}`
+          //   })
+          //   reject(`Request failed with status ${err}`)
+          // })
+        })
+
     }
 
     if (!window.indexedDB) {
@@ -114,7 +265,32 @@ function MyApp({ Component, pageProps }) {
         "userdata", "username").then(res => {
           console.log("---" + JSON.stringify(res)) //TODO: remove!!
           setIsLoading(false)
+          setUser({loading:false})
+
+          setInterval(() => {
+            if (storage.current.server == null)
+            {
+              storage.current.keyValuePair(
+                "serverdata", "useserver").then(res => {
+                  if (res?.data) {
+                    if (window["WebSocket"]) {
+                      console.log("attempting to connect to server...")
+                      storage.current.connectExternal()
+                    } else {
+                      newAlert({
+                        type: "error",
+                        title: "Connection failure",
+                        text: `Your browser does not support WebSockets`
+                      });
+                    }
+                  }
+                  storage.current.server = 'not connected'
+                })
+            }
+          }, 3000);
+          
         })
+
 
     };
 
@@ -123,39 +299,49 @@ function MyApp({ Component, pageProps }) {
 
       storage.current.db = event.target.result;
       storage.current.createDatabase("userdata", "info");
+      storage.current.createDatabase("serverdata", "info");
 
       newAlert({
         type: "info",
         title: "Update",
         text: "update complete"
       })
-    };
+    }
 
   }
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  
+
   useEffect(() => {
 
-    
+
     setIsLoading(true)
     setupStorage(false)
     setUser({ loading: true });
-    magic.user.isLoggedIn().then((isLoggedIn) => {
-      if (isLoggedIn) {
-        magic.user.getMetadata().then((userData) => setUser(userData));
-      } else {
-        //Router.push('/login');
-        setUser({ user: null });
-      }
-    });
-    
+
+    // storage.current.keyValuePair("serverdata", "useserver").then(res => {
+    //   console.log("loaded useserver")
+    // })
+
+    // magic.user.isLoggedIn().then((isLoggedIn) => {
+    //   if (isLoggedIn) {
+    //     magic.user.getMetadata().then((userData) => setUser(userData));
+    //   } else {
+    //     //Router.push('/login');
+    //     setUser({ user: null });
+    //   }
+    // });
+
   }, []);
 
   useEffect(() => {
-    
+
+  }, [])
+
+  useEffect(() => {
+
     applyMode(prefersDarkMode ? Mode.Dark : Mode.Light);
-    
+
   })
 
 
