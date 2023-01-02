@@ -179,6 +179,16 @@ function MyApp({ Component, pageProps }) {
             })
           }
 
+          storage.current.server.onerror = evt => {
+            console.error(evt)
+            reject(false)
+            setUser({loading: false})
+            storage.current.server = null
+            storage.current.onMessageRecieved.forEach( reciever => {
+              reciever("[connection failed]")
+            })
+          }
+
           storage.current.server.onopen = () => {
             console.log("test")
             storage.current.server.send(auth)
@@ -242,6 +252,17 @@ function MyApp({ Component, pageProps }) {
     if (!window.indexedDB) {
       console.log("Your browser doesn't support a stable version of IndexedDB.");
     }
+    
+      if (navigator.storage && navigator.storage.persist) {
+          navigator.storage.persist().then((persistent) => {
+              if (persistent) {
+                  console.log("Storage will not be cleared except by explicit user action");
+              } else {
+                  console.log("Storage may be cleared by the UA under storage pressure.");
+              }
+          });
+      }
+
     let request = window.indexedDB.open("testing05", 1);
     request.onerror = event => {
       newAlert({
