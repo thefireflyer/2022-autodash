@@ -7,6 +7,7 @@ import { navInfo } from '../components/constants';
 import { StorageContext } from '../lib/StorageContext';
 import { CloseRounded, ListAltOutlined, SaveRounded, SettingsRounded } from '@mui/icons-material';
 import { useRouter } from 'next/router';
+import {SaveDocument, SystemStorageContext} from "../lib/SystemStorageContext";
 
 const Settings = (props) => {
   const [user] = useContext(UserContext);
@@ -59,7 +60,7 @@ const Settings = (props) => {
     storage.current.onMessageRecieved.push(updateLog)
 
     // if (window["WebSocket"] && data.connected) {
-      
+
     //   var operatingSystems = [
     //     { name: 'Windows Phone', value: 'Windows Phone', version: 'OS' },
     //     { name: 'Windows', value: 'Win', version: 'NT' },
@@ -363,8 +364,22 @@ const Settings = (props) => {
             </Table>
           </TableContainer>
         </Card>
-      </>
+          </>
         : <></>}
+      <Card sx={{ p: 3 }} variant={`outlined`}>
+        <List>
+          <ListItemButton onClick={async () => {
+
+            SaveDocument("test")
+
+          }}>
+            <ListItemText>
+              Test
+
+            </ListItemText>
+          </ListItemButton>
+        </List>
+      </Card>
       {/* <Card sx={{ p: 3 }} variant={`outlined`}>
       </Card> */}
     </Stack>
